@@ -73,7 +73,7 @@ function App() {
   async function signOut() {
     setError("");
     try {
-      const response = await fetch("/api/logout", { method: "POST" });
+      const response = await fetch("https://flight-backend-32yg.onrender.com/api/logout", { method: "POST" });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Could not sign out.");
       setAuthenticated(false);
@@ -93,7 +93,7 @@ function App() {
     const form = new FormData();
     form.append("file", file);
     try {
-      const response = await fetch("/api/extract", { method: "POST", body: form });
+      const response = await fetch("https://flight-backend-32yg.onrender.com/api/extract", { method: "POST", body: form });
       const result = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
@@ -121,7 +121,7 @@ function App() {
     setHypotheticalRecommendation("");
     setNotamBusy(true);
     try {
-      const response = await fetch("/api/analyze-notams", {
+      const response = await fetch("https://flight-backend-32yg.onrender.com/api/analyze-notams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -152,7 +152,7 @@ function App() {
     setRecommendationModel("");
     setRecommendationBusy(true);
     try {
-      const response = await fetch("/api/hypothetical-recommendation", {
+      const response = await fetch("https://flight-backend-32yg.onrender.com/api/hypothetical-recommendation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
