@@ -36,7 +36,7 @@ function App() {
 
   useEffect(() => {
     let active = true;
-    fetch("/api/auth")
+    fetch("https://flight-backend-32yg.onrender.com/api/auth")
       .then(async (response) => {
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || "Could not check your login.");
@@ -55,7 +55,7 @@ function App() {
     setAuthError("");
     setAuthBusy(true);
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("https://flight-backend-32yg.onrender.com/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
