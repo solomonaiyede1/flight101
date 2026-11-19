@@ -7,6 +7,7 @@ import secrets
 import urllib.error
 import urllib.request
 from datetime import datetime, timedelta, timezone
+from flask_cors import CORS
 
 from flask import Flask, jsonify, request, session
 from pypdf import PdfReader
@@ -15,6 +16,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 
 app = Flask(__name__)
+CORS(app, origins=[
+    "https://flight02.onrender.com"
+])
 app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024
 app.config.update(
     SECRET_KEY=os.environ.get("DISPATCH_SESSION_SECRET") or secrets.token_hex(32),
