@@ -121,7 +121,7 @@ function App() {
     setHypotheticalRecommendation("");
     setNotamBusy(true);
     try {
-      const response = await fetch("/api/analyze-notams", {
+      const response = await fetch("https://flight-backend-32yg.onrender.com/api/analyze-notams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
