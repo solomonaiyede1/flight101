@@ -1,0 +1,58 @@
+.notam-entry textarea{display:block;width:100%;margin-top:15px;padding:12px;border:1px solid #dce3e6;border-radius:6px;color:#243944;font:12px/1.6 "DM Mono",monospace;resize:vertical}
+.notam-entry textarea:focus{outline:2px solid #b9eadc;border-color:#32ae91}
+.notam-help{color:#77858c;font-size:11px;line-height:1.6}
+.notam-submit-row{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:12px}
+.notam-submit-row>span,.notam-disclaimer{color:#849198;font-size:10px;line-height:1.6}
+.primary-button{border:0;border-radius:5px;background:#173344;color:#fff;padding:10px 14px;font-size:11px;font-weight:600;white-space:nowrap}
+.primary-button:disabled{cursor:not-allowed;opacity:.5}
+.hypothetical-heading{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.hypothetical-heading>div{flex:1}
+.hypothetical-heading>div>p{margin:7px 0 0;color:#77858c;font-size:10px;line-height:1.6}
+.hypothetical-heading .secondary-button:disabled{cursor:not-allowed;opacity:.55}
+.hypothetical-output{margin-top:14px;padding:12px;border-left:3px solid #35ae91;background:#f3faf7}
+.hypothetical-output strong{font-size:10px;color:#267761}
+.hypothetical-output p{margin:6px 0 0;color:#52666b;font-size:11px;line-height:1.7;white-space:pre-wrap}
+.notam-result-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.impact-status{padding:5px 8px;border-radius:4px;font:500 9px "DM Mono",monospace;text-transform:uppercase;white-space:nowrap}
+.impact-status.affected{background:#fff0ed;color:#ad4535}
+.impact-status.no_impact{background:#e8f7f2;color:#267761}
+.impact-status.undetermined{background:#fff7e7;color:#8a6723}
+.notam-condition{color:#56666e;font-size:11px;line-height:1.6;margin:13px 0}
+.notam-dimensions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:12px;background:#f7f9f9;border-radius:5px}
+.notam-dimensions .detail-row{border:0;padding:0;display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.notam-dimensions .detail-row span{font-size:9px}
+.notam-dimensions .detail-row strong{text-align:left;font-size:10px;text-transform:capitalize;overflow-wrap:anywhere}
+.notam-distance{color:#6e7c83;font-size:10px}
+.notam-recommendation{margin-top:13px;padding:11px 12px;border-left:3px solid #35ae91;background:#f3faf7}
+.notam-recommendation strong{font-size:11px;text-transform:capitalize}
+.notam-recommendation p,.notam-warning{margin:5px 0 0;color:#64737a;font-size:10px;line-height:1.6}
+.notam-alternatives{margin-top:11px;color:#627078;font-size:10px;line-height:1.6}
+.notam-alternatives>strong{font-size:10px}
+.notam-alternatives p{margin:5px 0 0}
+.notam-alternatives b{text-transform:capitalize}
+.notam-warning{color:#936021}
+.notam-raw{margin-top:12px;color:#627078;font-size:10px}
+.notam-raw summary{cursor:pointer}
+.notam-raw pre{overflow:auto;padding:10px;background:#f7f9f9;border-radius:4px;font-size:10px}
+.notam-disclaimer{margin:0 2px}
+.route-point-scroll{overflow:auto;margin:15px 0}
+.route-point-table{min-width:650px}
+.route-point-row{display:grid;grid-template-columns:1.05fr 1.4fr .8fr .7fr .8fr .8fr;gap:12px;align-items:center;padding:9px 10px;border-bottom:1px solid #edf0f1;color:#586970;font:10px "DM Mono",monospace}
+.route-point-row strong{color:#243944;font-weight:500}
+.route-point-header{background:#f7f9f9;color:#7a888f;font-size:9px;letter-spacing:.3px}
+.route-point-header span{white-space:nowrap}
+@media(max-width:900px){.section-tabs{gap:12px;overflow-x:auto}.notam-dimensions{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.notam-submit-row{align-items:flex-start;flex-direction:column}.notam-result-heading{align-items:flex-start;flex-direction:column}.hypothetical-heading{align-items:flex-start;flex-direction:column}}
+.login-shell{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 0,#e2f5ef 0,transparent 55%),#f3f5f6}
+.login-card{width:min(100%,410px);padding:34px;background:#fff;border:1px solid #e8ecee;border-radius:10px;box-shadow:0 12px 40px #2538440d}
+.login-brand{margin:0 0 34px}
+.login-card h1{margin:0 0 7px;color:#172b38;font:800 24px Manrope,sans-serif;letter-spacing:-.7px}
+.login-card>p{margin:0 0 23px;color:#7d8991;font-size:12px;line-height:1.6}
+.login-form{display:flex;flex-direction:column;gap:8px}
+.login-form label{margin-top:7px;color:#3e515a;font-size:11px;font-weight:600}
+.login-form input{width:100%;height:40px;padding:0 11px;border:1px solid #dce3e6;border-radius:5px;color:#243944;font:13px "DM Sans",sans-serif}
+.login-form input:focus{outline:2px solid #b9eadc;border-color:#32ae91}
+.login-submit{width:100%;margin-top:12px;height:40px}
+.login-loading{display:flex;align-items:center;justify-content:center;gap:11px;padding:20px 0;color:#71818a;font-size:12px}
+.login-loading .spinner{border-color:#dbe5e4;border-top-color:#228d77}
+.logout-button{border:1px solid #dce3e6;border-radius:5px;background:#fff;color:#53636b;padding:7px 10px;font-size:10px;font-weight:600}
