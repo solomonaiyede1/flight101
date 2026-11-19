@@ -1,5 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import "./notams.css";
+
+// Flask API connection. Change this URL if your Render backend URL changes.
+const api = axios.create({
+  baseURL: "https://flight-backend-32yg.onrender.com",
+  withCredentials: true,
+  headers: { "Content-Type": "application/json" },
+});
+
+function getApiError(error, fallback) {
+  return error.response?.data?.error || error.message || fallback;
+}
 
 const sections = [
   { id: "overview", label: "Overview", icon: "◫" },
@@ -36,18 +48,18 @@ function App() {
 
   useEffect(() => {
     let active = true;
-    fetch("https://flight-backend-32yg.onrender.com/api/auth")
-      .then(async (response) => {
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || "Could not check your login.");
-        if (active) setAuthenticated(result.authenticated);
+
+    api.get("/api/auth")
+      .then((response) => {
+        if (active) setAuthenticated(response.data.authenticated);
       })
-      .catch((authCheckError) => {
-        if (active) setAuthError(authCheckError.message || "Could not connect to the login service.");
+      .catch((error) => {
+        if (active) setAuthError(getApiError(error, "Could not connect to the login service."));
       })
       .finally(() => {
         if (active) setAuthReady(true);
       });
+
     return () => { active = false; };
   }, []);
 
@@ -55,16 +67,10 @@ function App() {
     setAuthError("");
     setAuthBusy(true);
     try {
-      const response = await fetch("https://flight-backend-32yg.onrender.com/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Sign-in failed.");
+      await api.post("/api/login", { username, password });
       setAuthenticated(true);
-    } catch (loginError) {
-      setAuthError(loginError.message || "Could not connect to the login service.");
+    } catch (error) {
+      setAuthError(getApiError(error, "Could not connect to the login service."));
     } finally {
       setAuthBusy(false);
     }
@@ -73,16 +79,14 @@ function App() {
   async function signOut() {
     setError("");
     try {
-      const response = await fetch("https://flight-backend-32yg.onrender.com/api/logout", { method: "POST" });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Could not sign out.");
+      await api.post("/api/logout");
       setAuthenticated(false);
       setFlight(null);
       setNotamText("");
       setNotamResults([]);
       setHypotheticalRecommendation("");
-    } catch (logoutError) {
-      setError(logoutError.message || "Could not connect to the login service.");
+    } catch (error) {
+      setError(getApiError(error, "Could not connect to the login service."));
     }
   }
 
@@ -90,25 +94,26 @@ function App() {
     if (!file) return;
     setError("");
     setBusy(true);
+
     const form = new FormData();
     form.append("file", file);
+
     try {
-      const response = await fetch("https://flight-backend-32yg.onrender.com/api/extract", { method: "POST", body: form });
-      const result = await response.json();
-      if (!response.ok) {
-        if (response.status === 401) {
-          setAuthenticated(false);
-          setFlight(null);
-        }
-        throw new Error(result.error || "Could not process this OFP.");
-      }
+      // Do not manually set Content-Type for FormData; Axios adds the boundary.
+      const response = await api.post("/api/extract", form);
+      const result = response.data;
+
       setFlight(result);
       setNotamResults([]);
       setNotamText("");
       setHypotheticalRecommendation("");
       setActiveSection("overview");
-    } catch (uploadError) {
-      setError(uploadError.message || "Could not connect to the OFP extraction service.");
+    } catch (error) {
+      if (error.response?.status === 401) {
+        setAuthenticated(false);
+        setFlight(null);
+      }
+      setError(getApiError(error, "Could not connect to the OFP extraction service."));
     } finally {
       setBusy(false);
       if (inputRef.current) inputRef.current.value = "";
@@ -120,27 +125,20 @@ function App() {
     setNotamResults([]);
     setHypotheticalRecommendation("");
     setNotamBusy(true);
+
     try {
-      const response = await fetch("https://flight-backend-32yg.onrender.com/api/analyze-notams", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          notams: notamText,
-          route: flight.route,
-          flight: flight.flight,
-        }),
+      const response = await api.post("/api/analyze-notams", {
+        notams: notamText,
+        route: flight.route,
+        flight: flight.flight,
       });
-      const result = await response.json();
-      if (!response.ok) {
-        if (response.status === 401) {
-          setAuthenticated(false);
-          setFlight(null);
-        }
-        throw new Error(result.error || "Could not analyze these NOTAMs.");
+      setNotamResults(response.data.results);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        setAuthenticated(false);
+        setFlight(null);
       }
-      setNotamResults(result.results);
-    } catch (analysisError) {
-      setError(analysisError.message || "Could not connect to the NOTAM analysis service.");
+      setError(getApiError(error, "Could not analyze these NOTAMs."));
     } finally {
       setNotamBusy(false);
     }
@@ -151,28 +149,21 @@ function App() {
     setHypotheticalRecommendation("");
     setRecommendationModel("");
     setRecommendationBusy(true);
+
     try {
-      const response = await fetch("https://flight-backend-32yg.onrender.com/api/hypothetical-recommendation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          notams: notamText,
-          route: flight.route,
-          flight: flight.flight,
-        }),
+      const response = await api.post("/api/hypothetical-recommendation", {
+        notams: notamText,
+        route: flight.route,
+        flight: flight.flight,
       });
-      const result = await response.json();
-      if (!response.ok) {
-        if (response.status === 401) {
-          setAuthenticated(false);
-          setFlight(null);
-        }
-        throw new Error(result.error || "Could not generate a hypothetical recommendation.");
+      setHypotheticalRecommendation(response.data.recommendation);
+      setRecommendationModel(response.data.model);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        setAuthenticated(false);
+        setFlight(null);
       }
-      setHypotheticalRecommendation(result.recommendation);
-      setRecommendationModel(result.model);
-    } catch (recommendationError) {
-      setError(recommendationError.message || "Could not connect to local Ollama.");
+      setError(getApiError(error, "Could not generate a hypothetical recommendation."));
     } finally {
       setRecommendationBusy(false);
     }
@@ -192,8 +183,8 @@ function App() {
     }
   }
 
-  const tripFuel = flight?.fuel.find((item) => item.label === "Trip");
-  const rampFuel = flight?.fuel.find((item) => item.label === "Ramp fuel");
+  const tripFuel = flight?.fuel?.find((item) => item.label === "Trip");
+  const rampFuel = flight?.fuel?.find((item) => item.label === "Ramp fuel");
 
   if (!authReady) return <LoginScreen loading />;
   if (!authenticated) {
